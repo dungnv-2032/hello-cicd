@@ -53,6 +53,7 @@ jobs:
             }
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_WEBHOOK }}
 
   approved:
     needs: deploy_release
