@@ -14,6 +14,45 @@ jobs:
         uses: actions/checkout@v2
 
       # Add your deployment steps here, such as building and deploying your application
+      build:
+        if: github.event.pull_request.merged == true
+        docker:
+          runs-on: ubuntu-latest
+          steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Login Docker Hub
+              uses: docker/login-action@v1
+              with:
+                username: ${{ secrets.DOCKERHUB_USERNAME }}
+                password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+            - name: Setup Docker Buildx
+              uses: docker/setup-buildx-action@v1
+              id: buildx
+
+            - name: Cache Docker Image Layers
+              uses: actions/cache@v2
+              with:
+                path: /tmp/.buildx-cache
+                key: ${{ runner.os }}-buildx-${{ github.sha }}
+                restore-keys: |
+                  ${{ runner.os }}-buildx-
+            - name: Build and Push Docker Image
+              uses: docker/build-push-action@v2
+              id: docker_build
+              with:
+                context: ./
+                file: ./Dockerfile
+                builder: ${{ steps.buildx.outputs.name }}
+                push: true
+                tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
+                cache-from: type=local,src=/tmp/.buildx-cache
+                cache-to: type=local,dest=/tmp/.buildx-cache
+
+            - name: Verify
+              run: echo ${{ steps.docker_build.outputs.digest }}
 
       # Notify Slack with an interactive message
       - name: Notify Slack
@@ -59,42 +98,3 @@ jobs:
       - name: Set output
         id: approval_status
         run: echo "Approval status is ${{ steps.approve_or_cancel.outputs.result }}"
-  build:
-    if: github.event.pull_request.merged == true
-    docker:
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-
-        - name: Login Docker Hub
-          uses: docker/login-action@v1
-          with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-
-        - name: Setup Docker Buildx
-          uses: docker/setup-buildx-action@v1
-          id: buildx
-
-        - name: Cache Docker Image Layers
-          uses: actions/cache@v2
-          with:
-            path: /tmp/.buildx-cache
-            key: ${{ runner.os }}-buildx-${{ github.sha }}
-            restore-keys: |
-              ${{ runner.os }}-buildx-
-        - name: Build and Push Docker Image
-          uses: docker/build-push-action@v2
-          id: docker_build
-          with:
-            context: ./
-            file: ./Dockerfile
-            builder: ${{ steps.buildx.outputs.name }}
-            push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
-            cache-from: type=local,src=/tmp/.buildx-cache
-            cache-to: type=local,dest=/tmp/.buildx-cache
-
-        - name: Verify
-          run: echo ${{ steps.docker_build.outputs.digest }}
