@@ -19,9 +19,10 @@ jobs:
 
       # Notify Slack with an interactive message
       - name: Report Status
-        uses: rtCamp/action-slack-notify@v2
+      - uses: actions/checkout@v3
         with:
-          channel-id: "C06SM71HT0U"
+          slack_token: ${{ secrets.SLACK_TOKEN }}
+          channel_id: "C06SM71HT0U"
           payload: |
             {
               "text": "Would you like to play a game?",
