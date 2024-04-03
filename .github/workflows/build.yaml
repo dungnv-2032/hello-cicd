@@ -24,19 +24,41 @@ jobs:
           channel-id: "C06SM71HT0U"
           payload: |
             {
-              "fallback": "Required text summary of the attachment that is shown by clients that understand attachments but choose not to show them.",
-
-              "text": "Optional text that should appear within the attachment",
-              "pretext": "Optional text that should appear above the formatted data",
-
-              "color": "#36a64f", // Can either be one of “good”, “warning”, “danger” or any hex colour code
-
-              // Fields are displayed in a table on the message
-              "fields": [
-                {
-                  "title": "Required field title", // The title cannot contain markup and will be escaped for you
-                  "value": "Text value of the field. Can contain standard message markup and must be escaped as normal. Can be multi-line.",
-                  "short": false // Optional flag indicating whether the `value` is short enough to be displayed side-by-side with other values
+              "text": "Would you like to play a game?",
+              "attachments": [
+                  {
+                    "text": "Choose a game to play",
+                    "fallback": "You are unable to choose a game",
+                    "callback_id": "wopr_game",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    "actions": [
+                      {
+                        "name": "game",
+                        "text": "Chess",
+                        "type": "button",
+                        "value": "chess"
+                      },
+                      {
+                        "name": "game",
+                        "text": "Falken's Maze",
+                        "type": "button",
+                        "value": "maze"
+                      },
+                      {
+                        "name": "game",
+                        "text": "Thermonuclear War",
+                        "style": "danger",
+                        "type": "button",
+                        "value": "war",
+                        "confirm": {
+                            "title": "Are you sure?",
+                            "text": "Wouldn't you prefer a good game of chess?",
+                            "ok_text": "Yes",
+                            "dismiss_text": "No"
+                        }
+                    }
+                  ]
                 }
               ]
             }
