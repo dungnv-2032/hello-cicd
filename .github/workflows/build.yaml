@@ -22,33 +22,21 @@ jobs:
         uses: slackapi/slack-github-action@v1.22.0
         with:
           channel-id: "C06SM71HT0U"
-          payload: |
-            {
-              "text": "
-                *Deployment Status*:
-                  - Repository: ${{ github.repository }}
-                  - Branch: ${{ github.ref }}
-                  - Commit: ${{ github.sha }}
-                  - Status: ${{ job.status }}
-                  - Event Name: ${{ github.event_name }}
-                  - Event Path: ${{ github.event_path }}
-                  - Action Run ID: ${{ github.run_id }}
-                  - Action Run Number: ${{ github.run_number }}
-                  - Please approve or cancel this deployment.
-                  <!channel>\Please approve or cancel this deployment:",
-              "actions": [
+          payload: {
+              "fallback": "Required text summary of the attachment that is shown by clients that understand attachments but choose not to show them.",
+
+              "text": "Optional text that should appear within the attachment",
+              "pretext": "Optional text that should appear above the formatted data",
+
+              "color": "#36a64f", // Can either be one of “good”, “warning”, “danger” or any hex colour code
+
+              // Fields are displayed in a table on the message
+              "fields": [
                 {
-                    "name": "approve",
-                    "text": "Approve",
-                    "type": "button",
-                    "value": "approved"
-                },
-                {
-                   "name": "cancel",
-                    "text": "Cancel",
-                    "type": "button",
-                    "value": "cancel"
-                },
+                  "title": "Required field title", // The title cannot contain markup and will be escaped for you
+                  "value": "Text value of the field. Can contain standard message markup and must be escaped as normal. Can be multi-line.",
+                  "short": false // Optional flag indicating whether the `value` is short enough to be displayed side-by-side with other values
+                }
               ]
             }
         env:
