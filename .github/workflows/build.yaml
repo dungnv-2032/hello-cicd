@@ -24,11 +24,10 @@ jobs:
         with:
           payload: |
             {
-              "text": "<!channel>\nDeployment application :deploy:\n- Repository: ${{ github.repository }}\n- Branch: ${{ github.ref }}\n- Commit: ${{ github.sha }}\n- Status: ${{ job.status }}\n- Event Name: ${{ github.event_name }}\n- Event Path: ${{ github.event_path }}\n- Action Run ID: ${{ github.run_id }}\n- Action Run Number: ${{ github.run_number }}",
+              "text": "<!channel>\nDeployment application :deploy:",
               "attachments": [
                 {
-                  "text": "*Deployment Status*:",
-                  "attachment_type": "default",
+                  "pretext": "ENV: production\nRepository: ${{ github.repository }}\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
                   "actions": [
                     {
                       "name": "approved",
