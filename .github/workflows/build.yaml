@@ -19,7 +19,7 @@ jobs:
 
       # Notify Slack with an interactive message
       - name: Report Status
-        uses: slackapi/slack-github-action@v1.22.0
+        uses: rtCamp/action-slack-notify@v2
         with:
           channel-id: "C06SM71HT0U"
           payload: |
