@@ -27,36 +27,30 @@ jobs:
               "text": "Would you like to play a game?",
               "attachments": [
                 {
-                  "text": "Choose a game to play",
-                  "fallback": "You are unable to choose a game",
-                  "callback_id": "wopr_game",
-                  "color": "#3AA3E3",
+                  "text": "*Deployment Status*:
+                            - Repository: ${{ github.repository }}
+                            - Branch: ${{ github.ref }}
+                            - Commit: ${{ github.sha }}
+                            - Status: ${{ job.status }}
+                            - Event Name: ${{ github.event_name }}
+                            - Event Path: ${{ github.event_path }}
+                            - Action Run ID: ${{ github.run_id }}
+                            - Action Run Number: ${{ github.run_number }}",
                   "attachment_type": "default",
                   "actions": [
                     {
-                      "name": "game",
-                      "text": "Chess",
+                      "name": "approved",
+                      "text": "approve",
                       "type": "button",
-                      "value": "chess"
+                      "value": "approved"
+                      "style": "primary"
                     },
                     {
-                      "name": "game",
-                      "text": "Falken's Maze",
+                      "name": "cancel",
+                      "text": "Cancel",
                       "type": "button",
-                      "value": "maze"
-                    },
-                    {
-                      "name": "game",
-                      "text": "Thermonuclear War",
-                      "style": "danger",
-                      "type": "button",
-                      "value": "war",
-                      "confirm": {
-                        "title": "Are you sure?",
-                        "text": "Wouldn't you prefer a good game of chess?",
-                        "ok_text": "Yes",
-                        "dismiss_text": "No"
-                      }
+                      "value": "cancel"
+                      "style": "danger"
                     }
                   ]
                 }
