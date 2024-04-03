@@ -18,9 +18,8 @@ jobs:
         run: echo "Deploying application..."
 
       # Notify Slack with an interactive message
-      - name: Notify Slack
-        if: always()
-        uses: rtCamp/action-slack-notify@v2
+      - name: Report Status
+        uses: slackapi/slack-github-action@v1.22.0
         with:
           channel-id: "C06SM71HT0U"
           payload: |
