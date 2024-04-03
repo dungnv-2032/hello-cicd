@@ -16,7 +16,7 @@ jobs:
       # Add your deployment steps here, such as building and deploying your application
       - name: Deploying Application
         run: echo "Deploying application..."
-        
+
       # Notify Slack with an interactive message
       - name: Notify Slack
         if: always()
@@ -36,7 +36,15 @@ jobs:
             - Please approve or cancel this deployment.
           author_name: GitHub Actions
           interactive: true
-          author_icon: 'https://github.com/github.png'
+          actions:
+            - name: approve
+              text: Approve
+              type: button
+              style: primary
+            - name: cancel
+              text: Cancel
+              type: button
+              style: danger
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
