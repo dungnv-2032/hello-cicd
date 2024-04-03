@@ -36,19 +36,28 @@ jobs:
             - Please approve or cancel this deployment.
           author_name: GitHub Actions
           interactive: true
-          actions:
-            - name: approve
-              text: Approve
-              type: button
-              style: primary
-            - name: cancel
-              text: Cancel
-              type: button
-              style: danger
+          payload: |
+            {
+              "text": "<!channel>\Please approve or cancel this deployment:",
+              "actions": [
+                {
+                    "name": "approve",
+                    "text": "Approve",
+                    "type": "button",
+                    "value": "approved"
+                },
+                {
+                   "name": "cancel",
+                    "text": "Cancel",
+                    "type": "button",
+                    "value": "cancel"
+                },
+              ]
+            }
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-  approval:
+  approved:
     needs: deploy_release
     runs-on: ubuntu-latest
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'pending'
