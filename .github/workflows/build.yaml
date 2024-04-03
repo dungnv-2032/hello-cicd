@@ -25,7 +25,7 @@ jobs:
           # For posting a rich message using Block Kit
             payload-file-path: "./payload-slack-content.json"
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   approved:
