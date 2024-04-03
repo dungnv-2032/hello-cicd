@@ -24,10 +24,11 @@ jobs:
         with:
           payload: |
             {
-              "text": "<!channel>\nDeployment application :deploy:",
+              "text": "<!channel>Deployment application :deploy:",
               "attachments": [
                 {
-                  "pretext": "ENV: production\nRepository: ${{ github.repository }}\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
+                  "text": "*Deployment Status*:
+                  "attachment_type": "default",
                   "actions": [
                     {
                       "name": "approved",
