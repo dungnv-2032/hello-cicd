@@ -7,40 +7,94 @@ on:
     types:
       - closed
 jobs:
-  docker:
+  deploy_release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Login Docker Hub
-        uses: docker/login-action@v1
+      # Add your deployment steps here, such as building and deploying your application
+
+      # Notify Slack with an interactive message
+      - name: Notify Slack
+        if: always()
+        uses: rtCamp/action-slack-notify@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          status: ${{ job.status }}
+          text: |
+            *Deployment Status*:
+            - Repository: ${{ github.repository }}
+            - Branch: ${{ github.ref }}
+            - Commit: ${{ github.sha }}
+            - Status: ${{ job.status }}
+            - Event Name: ${{ github.event_name }}
+            - Event Path: ${{ github.event_path }}
+            - Action Run ID: ${{ github.run_id }}
+            - Action Run Number: ${{ github.run_number }}
+          author_name: GitHub Actions
+          interactive: true
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        id: buildx
-
-      - name: Cache Docker Image Layers
-        uses: actions/cache@v2
+  approve_or_cancel:
+    needs: deploy_release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - name: Wait for user input
+        id: approve_or_cancel
+        uses: actions/github-script@v5
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-      - name: Build and Push Docker Image
-        uses: docker/build-push-action@v2
-        id: docker_build
-        with:
-          context: ./
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          github-token: ${{ secrets.GIT_TOKEN }}
+          script: |
+            const slackApproval = context.payload;
+            if (slackApproval.payload.actions[0].name === 'approve') {
+              console.log('Approval received.');
+              return 'approved';
+            } else {
+              console.log('Deployment canceled.');
+              return 'canceled';
+            }
 
-      - name: Verify
-        run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Set output
+        id: approval_status
+        run: echo "Approval status is ${{ steps.approve_or_cancel.outputs.result }}"
+  build:
+    if: github.event.pull_request.merged == true
+    docker:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+
+        - name: Login Docker Hub
+          uses: docker/login-action@v1
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
+        - name: Setup Docker Buildx
+          uses: docker/setup-buildx-action@v1
+          id: buildx
+
+        - name: Cache Docker Image Layers
+          uses: actions/cache@v2
+          with:
+            path: /tmp/.buildx-cache
+            key: ${{ runner.os }}-buildx-${{ github.sha }}
+            restore-keys: |
+              ${{ runner.os }}-buildx-
+        - name: Build and Push Docker Image
+          uses: docker/build-push-action@v2
+          id: docker_build
+          with:
+            context: ./
+            file: ./Dockerfile
+            builder: ${{ steps.buildx.outputs.name }}
+            push: true
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/flask-helloworld
+            cache-from: type=local,src=/tmp/.buildx-cache
+            cache-to: type=local,dest=/tmp/.buildx-cache
+
+        - name: Verify
+          run: echo ${{ steps.docker_build.outputs.digest }}
