@@ -24,19 +24,20 @@ jobs:
         with:
           payload: |
             {
-              "text": "Có một bản release cần được approve ?",
+              "text": "Có một bản release cần được approve.",
+              "pretext": "ENV: production\nRepository: ${{ github.repository }}\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
               "attachments": [
                 {
-                  "text": "Choose a game to play",
+                  "text": "Bạn có đồng ý chấp nhận bản release này ko ?",
                   "fallback": "You are unable to choose a game",
-                  "callback_id": "wopr_game",
+                  "callback_id": "approve_cancel_release",
                   "color": "#3AA3E3",
                   "attachment_type": "default",
                   "actions": [
                     {
                       "name": "cancel",
                       "text": "Cancel",
-                      "style": "cancel",
+                      "style": "danger",
                       "type": "button",
                       "value": "cancel",
                       "confirm": {
@@ -49,7 +50,7 @@ jobs:
                     {
                       "name": "approved",
                       "text": "approve",
-                      "style": "danger",
+                      "style": "primary",
                       "type": "button",
                       "value": "approved",
                       "confirm": {
@@ -70,7 +71,7 @@ jobs:
   approved:
     needs: deploy_release
     runs-on: ubuntu-latest
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'pending'
+    if: github.event_name == 'slack_interactive' && github.event.action.name == 'approve'
     steps:
       - name: Wait for approval
         uses: actions/github-script@v5
@@ -90,7 +91,7 @@ jobs:
   cancel:
     needs: deploy_release
     runs-on: ubuntu-latest
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'pending'
+    if: github.event_name == 'slack_interactive' && github.event.action.name == 'cancel'
     steps:
       - name: Wait for cancelation
         uses: actions/github-script@v5
