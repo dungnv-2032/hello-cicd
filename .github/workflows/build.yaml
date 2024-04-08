@@ -7,7 +7,7 @@ on:
     types:
       - closed
 jobs:
-  approval:
+  pre-approval:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
