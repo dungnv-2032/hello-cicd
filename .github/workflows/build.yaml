@@ -83,7 +83,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Report Status fail
-        if: success()
+        if: failure()
         id: slack_fail
         uses: slackapi/slack-github-action@v1.25.0
         with:
