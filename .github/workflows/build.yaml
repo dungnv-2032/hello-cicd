@@ -66,10 +66,10 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Wait for Approval (Optional)
-        uses: jossefmus/github-action-pause@v4  # Use pause action (optional)
+      - name: Sleep for 30 seconds
+        uses: jakejarvis/wait-action@master
         with:
-          minutes: 10
+          time: '300s'
 
   deployment:
     name: Deploy
