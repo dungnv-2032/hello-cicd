@@ -71,7 +71,7 @@ jobs:
       - name: Deploy to production
         run: echo deploying
       - name: Wait for approval
-        uses: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        uses: https://github.com/dungnv-2032/hello-cicd/actions/runs/8594386319
         with:
           secret: ${{ secrets.GIT_TOKEN }}
           approvers: trstringer
