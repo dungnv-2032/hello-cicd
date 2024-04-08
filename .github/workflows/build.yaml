@@ -67,7 +67,7 @@ jobs:
         timeout-minutes: 120
         with:
           secret: ${{ github.GIT_TOKEN }}
-          approvers: [dungnv-2032]
+          approvers: dungnv-2032,dungnv-2032
       - name: Deploy to production
         run: echo deploying
 
