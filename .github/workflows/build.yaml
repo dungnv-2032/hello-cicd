@@ -78,6 +78,9 @@ jobs:
             {
               "text": "Deloy finished !"
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
       - name: Report Status fail
         if: success()
         id: slack_fail
@@ -87,6 +90,9 @@ jobs:
             {
               "text": "Deloy Fail !"
             }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
 #  approved:
 #    needs: deploy_release
