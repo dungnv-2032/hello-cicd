@@ -42,7 +42,7 @@ jobs:
       - name: Deploy to production
         run: echo deploying
       - name: Wait for approval
-        uses: ${{ secrets.GIT_BRANCH_APPROVE_URL }}
+        uses: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         with:
           secret: ${{ secrets.GIT_TOKEN }}
           approvers: trstringer
