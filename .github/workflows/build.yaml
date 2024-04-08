@@ -7,7 +7,7 @@ on:
     types:
       - closed
 jobs:
-  deploy_release:
+  approval:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -66,53 +66,6 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - uses: trstringer/manual-approval@v1
-        with:
-          secret: ${{ github.GITHUB_TOKEN }}
-          approvers: dungnv-2032
-          minimum-approvals: 1
-          issue-title: "Deploying v1.3.5 to prod from staging"
-          issue-body: "Please approve or deny the deployment of version v1.3.5."
-          exclude-workflow-initiator-as-approver: false
-          additional-approved-words: ''
-          additional-denied-words: ''
 
-  approved:
-    needs: deploy_release
-    runs-on: ubuntu-latest
-    if: github.event_name == 'slack_interactive' && github.event.action.name == 'approve'
-    steps:
-      - name: Wait for approval
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.repos.createDeploymentStatus({
-              ...context.repo,
-              deployment_id: context.payload.deployment.id,
-              state: 'success',
-              log_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'Deployment approved and in progress.',
-              environment_url: 'https://github.com/dungnv-2032/hello-cicd/tree/master'
-            })
-            return 'approved'
-
-  cancel:
-    needs: deploy_release
-    runs-on: ubuntu-latest
-    if: github.event_name == 'slack_interactive' && github.event.action.name == 'cancel'
-    steps:
-      - name: Wait for cancelation
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            github.repos.createDeploymentStatus({
-              ...context.repo,
-              deployment_id: context.payload.deployment.id,
-              state: 'failure',
-              log_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-              description: 'Deployment canceled.',
-              environment_url: 'https://github.com/dungnv-2032/hello-cicd/tree/master'
-            })
-            return 'canceled'
+  outputs:
+    approval_status: ${{ steps.approval.outputs.approval_status }}
