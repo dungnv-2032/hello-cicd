@@ -71,25 +71,25 @@ jobs:
         with:
           minutes: 10
 
-    deployment:
-      name: Deploy
-      runs-on: ubuntu-latest
-      needs: pre-approval
-      steps:
-        - name: Wait for approval
-          uses: actions/github-script@v5
-          with:
-            github-token: ${{ secrets.GITHUB_TOKEN }}
-            script: |
-              github.repos.createDeploymentStatus({
-                ...context.repo,
-                deployment_id: context.payload.deployment.id,
-                state: 'success',
-                log_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
-                description: 'Deployment approved and in progress.',
-                environment_url: 'https://github.com/dungnv-2032/hello-cicd/tree/master'
-              })
-              return 'approved'
+  deployment:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: pre-approval
+    steps:
+      - name: Wait for approval
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createDeploymentStatus({
+              ...context.repo,
+              deployment_id: context.payload.deployment.id,
+              state: 'success',
+              log_url: 'https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}',
+              description: 'Deployment approved and in progress.',
+              environment_url: 'https://github.com/dungnv-2032/hello-cicd/tree/master'
+            })
+            return 'approved'
 
 #  approved:
 #    needs: deploy_release
