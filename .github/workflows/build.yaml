@@ -70,11 +70,6 @@ jobs:
           approvers: [dungnv-2032]
       - name: Deploy to production
         run: echo deploying
-      - name: Wait for approval
-        uses: https://github.com/dungnv-2032/hello-cicd/actions/runs/8594386319
-        with:
-          secret: ${{ secrets.GIT_TOKEN }}
-          approvers: trstringer
 
 #  approved:
 #    needs: deploy_release
