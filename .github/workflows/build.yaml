@@ -24,64 +24,28 @@ jobs:
         with:
           payload: |
             {
-              "text": "Có một bản release cần được approve.\nENV: staging\nRepository: ${{ github.repository }}\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
-              "attachments": [
-                {
-                  "text": "Bạn có đồng ý chấp nhận bản release này ko ?",
-                  "fallback": "You are unable to choose a game",
-                  "callback_id": "approve_cancel_release",
-                  "color": "#3AA3E3",
-                  "attachment_type": "default",
-                  "actions": [
-                    {
-                      "name": "cancel",
-                      "text": "Cancel",
-                      "style": "danger",
-                      "type": "button",
-                      "value": "cancel",
-                      "confirm": {
-                        "title": "Are you sure?",
-                        "text": "Có chắc là cancel ko ?",
-                        "ok_text": "Yes",
-                        "dismiss_text": "No"
-                      }
-                    },
-                    {
-                      "name": "approved",
-                      "text": "approve",
-                      "style": "primary",
-                      "type": "button",
-                      "value": "approved",
-                      "confirm": {
-                        "title": "Are you sure?",
-                        "text": "Có chắc là approve ko ?",
-                        "ok_text": "Yes",
-                        "dismiss_text": "No"
-                      }
-                    }
-                  ]
-                }
-              ]
+              "text": "Có một bản release cần được approve.\nENV: staging\nRepository: ${{ github.repository }}\nGitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\nPlease approved in URL ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-      - name: Sleep for 300 seconds
-        uses: jakejarvis/wait-action@master
-        with:
-          time: '300s'
-
   deploy:
     name: deploy
     runs-on: ubuntu-latest
     needs: build
     steps:
       - uses: trstringer/manual-approval@v1
+        timeout-minutes: 120
         with:
-          secret: ${{ github.TOKEN }}
-          approvers: dungnv-2032
+          secret: ${{ github.GIT_TOKEN }}
+          approvers: [dungnv-2032]
       - name: Deploy to production
         run: echo deploying
+      - name: Wait for approval
+        uses: ${{ secrets.GIT_BRANCH_APPROVE_URL }}
+        with:
+          secret: ${{ secrets.GIT_TOKEN }}
+          approvers: trstringer
 
 #  approved:
 #    needs: deploy_release
