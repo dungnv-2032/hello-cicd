@@ -71,7 +71,7 @@ jobs:
 
       - name: Report Status success
         if: success()
-        id: slack
+        id: slack_success
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
@@ -80,9 +80,7 @@ jobs:
             }
       - name: Report Status fail
         if: success()
-        run: |
-          git revert {commit_id}
-        id: slack
+        id: slack_fail
         uses: slackapi/slack-github-action@v1.25.0
         with:
           payload: |
