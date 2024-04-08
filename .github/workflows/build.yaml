@@ -12,6 +12,25 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
+      - name: Tag
+        id: autotagger
+        uses: butlerlogic/action-autotag@stable
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        id: create_release
+        if: steps.autotagger.outputs.tagname != ''
+        uses: actions/create-release@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.autotagger.outputs.tagname }}
+          release_name: Version ${{ steps.autotagger.outputs.version }}
+          body: ${{ steps.autotagger.outputs.tagmessage }}
+          draft: false
+          prerelease: true
+
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -32,6 +51,7 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ github.sha }}
           restore-keys: |
             ${{ runner.os }}-buildx-
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
         id: docker_build
@@ -43,10 +63,6 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
-      - name: Verify
-        run: echo ${{ steps.docker_build.outputs.digest }}
-      - name: Deploying Application
-        run: echo "Deploying application..."
 
       # Notify Slack with an interactive message
       - name: Send custom JSON data to Slack workflow
@@ -94,6 +110,17 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+      - name: Rollback Release
+        if: failure() && steps.create_release.outputs.id != ''
+        uses: author/action-rollback@stable
+        with:
+          # Using a known release ID
+          id: ${{ steps.create_release.id }}
+          # Using a tag name
+          tag: ${{ steps.autotagger.outputs.tagname }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #  approved:
 #    needs: deploy_release
