@@ -16,14 +16,14 @@ jobs:
         id: autotagger
         uses: butlerlogic/action-autotag@stable
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Release
         id: create_release
         if: steps.autotagger.outputs.tagname != ''
         uses: actions/create-release@v1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
         with:
           tag_name: ${{ steps.autotagger.outputs.tagname }}
           release_name: Version ${{ steps.autotagger.outputs.version }}
@@ -120,7 +120,7 @@ jobs:
           # Using a tag name
           tag: ${{ steps.autotagger.outputs.tagname }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 #  approved:
 #    needs: deploy_release
