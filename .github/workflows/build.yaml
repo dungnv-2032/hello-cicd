@@ -28,8 +28,6 @@ jobs:
           body: ${{ steps.autotagger.outputs.tagmessage }}
           draft: false
           prerelease: true
-          env:
-            GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
 
       - name: Login Docker Hub
         uses: docker/login-action@v1
