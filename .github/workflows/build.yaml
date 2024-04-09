@@ -23,7 +23,7 @@ jobs:
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
           docker build \
           -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous_version \
-          -f ./Dockerfile .
+          -f Dockerfile .
 #          # Gắn tag mới cho Docker image hiện tại
 #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous_version
       - uses: actions/checkout@v2
