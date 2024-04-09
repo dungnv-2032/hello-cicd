@@ -20,10 +20,10 @@ jobs:
 
       - name: Get current docker image and add tag
         run: |
-          docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
           # Gắn tag mới cho Docker image hiện tại
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous_version
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous_version
       - uses: actions/checkout@v2
 
 #      # Notify Slack with an interactive message
