@@ -1,5 +1,3 @@
-
-
 name: ci-cd
 on:
   workflow_dispatch:
@@ -22,10 +20,10 @@ jobs:
 
       - name: Get current docker image and add tag
         run: |
-          docker inspect dungc/hello-cicd:latest
+          docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd/hello-cicd:latest
           # Gắn tag mới cho Docker image hiện tại
-          docker tag dungc/hello-cicd:previous_version
-          docker push dungc/hello-cicd:latest
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd/hello-cicd:previous_version
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd/hello-cicd:latest
       - uses: actions/checkout@v2
 
 #      # Notify Slack with an interactive message
