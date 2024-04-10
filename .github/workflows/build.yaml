@@ -39,7 +39,7 @@ jobs:
     environment: staging
     name: build_and_push
     runs-on: ubuntu-latest
-    needs: tag_current_version
+    needs: send_notify_approve
     if: success()
     steps:
       - name: Login Docker Hub
