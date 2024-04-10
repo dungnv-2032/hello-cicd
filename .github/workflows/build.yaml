@@ -106,7 +106,7 @@ jobs:
   fail:
     name: fail_deploy
     runs-on: ubuntu-latest
-    if: approved_deploy()
+    if: fail()
     needs: approved_deploy
     steps:
       - name: Report Status fail
