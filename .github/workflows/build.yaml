@@ -104,7 +104,7 @@ jobs:
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
   fail:
-    name: approved_deploy
+    name: fail_deploy
     runs-on: ubuntu-latest
     if: approved_deploy()
     needs: approved_deploy
