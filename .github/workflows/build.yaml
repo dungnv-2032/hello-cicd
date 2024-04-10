@@ -8,6 +8,8 @@ on:
       - closed
 jobs:
   tag_current_version:
+    runs-on: ubuntu-latest
+    name: tag_current_version
     steps:
       - name: Get current docker image and add tag
         run: |
