@@ -66,7 +66,7 @@ jobs:
   approved_deploy:
     if: github.event.pull_request.merged == true
     environment: staging
-    name:   approved_deploy
+    name: approved_deploy
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -103,10 +103,10 @@ jobs:
         SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  fail:
+  failure:
     name: fail_deploy
     runs-on: ubuntu-latest
-    if: fail()
+    if: failure()
     needs: approved_deploy
     steps:
       - name: Report Status fail
@@ -123,7 +123,7 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
   rollback:
     runs-on: ubuntu-latest
-    needs: fail
+    needs: failure
     if: success()
     steps:
       - name: Login Docker Hub
