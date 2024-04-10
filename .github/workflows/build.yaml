@@ -60,7 +60,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t dungc/hello-cicd:latest .
-          docker push dungc/hello-cicd:latest
+          docker push dungc/hello-cicd:abcdef
 
   send_notify_success:
     name: send_notify_success
