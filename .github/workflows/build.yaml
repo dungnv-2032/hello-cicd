@@ -113,5 +113,6 @@ jobs:
       - name: Push Docker Image
         id: docker_pre_build
         run: |
+          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
           docker tag dungc/hello-cicd:previous dungc/hello-cicd:latest
           docker push dungc/hello-cicd:latest
