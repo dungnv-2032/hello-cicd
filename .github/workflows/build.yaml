@@ -1,4 +1,4 @@
-name: ci-cd
+name: cd-rollback
 on:
   workflow_dispatch:
   pull_request:
