@@ -16,17 +16,22 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-#       - name: Build current version
-#         run: |
-# #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-# #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
-# #          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
-#           docker build -t "$REPO$LATEST" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
-#       - name: checkout
-#           - uses: actions/checkout@v2
+      - name: Set variable
+        run: |
+          VERSION=${{ github.sha }}
 
-#       - name: build new version and add tag
-#           docker build -t "$TAG" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
+      - name: Build current version
+        run: |
+#          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
+#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
+          echo "$VERSION"
+          docker build -t "$REPO$LATEST" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
+      - name: checkout
+          - uses: actions/checkout@v2
+
+      - name: build new version and add tag
+          docker build -t "$TAG" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
 
 
   send_notify_approve:
