@@ -21,7 +21,8 @@ jobs:
           VERSION=$(git log -1 --pretty=%h)
           REPO="${{ github.repository }}:"
           TAG="$REPO$VERSION"
-          LATEST="${REPO}latest"
+          LATEST="${{REPO}}latest"
+        
       - name: Build current version
         run: |
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
