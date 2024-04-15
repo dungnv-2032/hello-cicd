@@ -22,7 +22,7 @@ jobs:
           REPO="${{ github.repository }}:"
           TAG="$REPO$VERSION"
           TAG_LASTEST="latest"
-          LATEST="TAG_LASTEST"
+          
       - name: Build current version
         run: |
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
