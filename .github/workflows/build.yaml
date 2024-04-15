@@ -17,8 +17,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Set variable
-        run: |
-          REPO="${{ github.repository }}:"
                     
       - name: Build current version
         run: |
