@@ -22,13 +22,13 @@ jobs:
           REPO="${{ github.repository }}:"
           TAG="$REPO$VERSION"
           TAG_LASTEST="latest"
-          LATEST="$REPO$TAG_LASTEST"
+          LATEST="TAG_LASTEST"
       - name: Build current version
         run: |
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
 #          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
-          docker build -t "$LATEST" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
+          docker build -t "$REPO$LATEST" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
       - name: checkout
           - uses: actions/checkout@v2
 
@@ -64,7 +64,7 @@ jobs:
     steps:
       - name: Push Image
         run: |
-          docker push ${REPO}latest
+          docker push $REPO$LATEST
 
   send_notify_success:
     name: send_notify_success
@@ -116,5 +116,5 @@ jobs:
       - name: Push Docker Image
         id: docker_pre_build
         run: |
-          docker tag $REPO$VERSION ${REPO}latest
-          docker push ${REPO}latest
+          docker tag $REPO$VERSION $REPO$LATEST
+          docker push $REPO$LATEST
