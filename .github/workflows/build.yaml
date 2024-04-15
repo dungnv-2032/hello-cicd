@@ -21,7 +21,7 @@ jobs:
       - name: Set variable
         id: set_variable
         run: |
-          echo "VERSION=${{ github.sha }}"
+          echo "${{ github.sha }}"
 
       - name: Build current version
         id: build_current_version
