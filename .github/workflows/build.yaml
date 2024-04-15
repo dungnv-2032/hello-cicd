@@ -7,7 +7,7 @@ on:
     types:
       - closed
 jobs:
-  tag_current_version:
+  tag_current_version_and_build:
     runs-on: ubuntu-latest
     name: tag_current_version
     steps:
@@ -16,12 +16,26 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-
-      - name: Get current docker image and add tag
+      - name: Set variable
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
+          VERSION=$(git log -1 --pretty=%h)
+          REPO="${{ github.repository }}:"
+          TAG="$REPO$VERSION"
+          LATEST="${REPO}latest"
+
+      - name:  Build current version
+        run: |
+
+#          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
+#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
+          docker build -t "$LATEST" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
+      - name: checkout
+          - uses: actions/checkout@v2
+
+      - name: build new version and add tag
+          docker build -t "$TAG" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
+
 
   send_notify_approve:
     name: send_notify_approve
@@ -42,25 +56,16 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  build_and_push:
+  push:
     environment: staging
     name: build_and_push
     runs-on: ubuntu-latest
     needs: send_notify_approve
     if: success()
     steps:
-      - name: Login Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-
-      - uses: actions/checkout@v2
-
-      - name: Build and Push Docker Image
+      - name: Push Image
         run: |
-          docker build -t dungc/hello-cicd:latest .
-          docker push dungc/hello-cicd:abcdef
+          docker push ${REPO}latest
 
   send_notify_success:
     name: send_notify_success
@@ -97,22 +102,20 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      # - name: Check version
+      #   id: check_version
+      #   run: |
+      #     docker manifest inspect $REPO$VERSION> /dev/null ; echo $?
+
 
   rollback:
     name: rollback
     runs-on: ubuntu-latest
     needs: send_notify_failure
-    if: failure()
+    if: failure() && docker manifest inspect $REPO$VERSION> /dev/null ; echo $?
     steps:
-      - name: Login Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-
       - name: Push Docker Image
         id: docker_pre_build
         run: |
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
-          docker tag dungc/hello-cicd:previous dungc/hello-cicd:latest
-          docker push dungc/hello-cicd:latest
+          docker tag $REPO$VERSION ${REPO}latest
+          docker push ${REPO}latest
