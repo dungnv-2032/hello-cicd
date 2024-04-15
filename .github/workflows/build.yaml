@@ -18,7 +18,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Set variable
         run: |
-          VERSION=$(git log -1 --pretty=%h)
           REPO="${{ github.repository }}:"
                     
       - name: Build current version
