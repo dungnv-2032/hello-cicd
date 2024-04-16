@@ -20,7 +20,7 @@ jobs:
       - name: docker pull
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-git      - name: set variable RepoDigests
+      - name: set variable RepoDigests
         run:  docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: print RepoDigests
         run: echo "$RepoDigests"
