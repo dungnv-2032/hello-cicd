@@ -19,9 +19,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: Print the image ID
-        run: echo "Image ID is ${{ steps.image-id.outputs.image_id }}"
-      - name: Print tags
-        run: echo "tags is ${{ steps.meta.outputs.tags }}"
+        run: echo "RepoDigests=docker inspect --format='{{.RepoDigests}}' gcr.io/alpha/homeapp:latest"
 
       - name: Set variable $VERSION
         run: echo "VERSION=latest"
@@ -29,9 +27,9 @@ jobs:
       - name: Set variable $previous
         run: echo "PREVIOUS=${{ github.sha }}"
 
-      - name: Build and tag image PREVIOUS
-        id: build_and_tag_image_previous
-        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:$PREVIOUS
+#      - name: Build and tag image PREVIOUS
+#        id: build_and_tag_image_previous
+#        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:$PREVIOUS
 
 #      - name: checkout
 #        uses: actions/checkout@v2
