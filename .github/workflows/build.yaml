@@ -21,7 +21,7 @@ jobs:
         id: image-id
         uses: s3vt/docker-image-id@v1.0.0
         with:
-          image_name: "s3vt/java:17"
+          image_name: "s3vt/java:18"
       - name: Print the image ID
         run: echo "Image ID is ${{ steps.image-id.outputs.image_id }}"
 
