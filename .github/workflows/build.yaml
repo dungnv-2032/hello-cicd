@@ -21,7 +21,7 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: set variable RepoDigests
-        run:  docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
       - name: print RepoDigests
         run: echo "$RepoDigests"
       - name: Set variable $VERSION
@@ -34,12 +34,14 @@ jobs:
 #        id: build_and_tag_image_previous
 #        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:$PREVIOUS
 
-#      - name: checkout
-#        uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v2
 #
-#      - name: Build and tag image $VERSION
-#        id: build_and_tag_previous
-#        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:$VERSION
+      - name: Build and tag image $VERSION
+        id: build_and_tag_previous
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #
 
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
