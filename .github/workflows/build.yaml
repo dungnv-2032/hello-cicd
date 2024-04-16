@@ -10,7 +10,6 @@ jobs:
   build_and_tag_image:
     runs-on: ubuntu-latest
     name: tag_current_version
-    id: build_and_tag_image
     steps:
       - name: Image ID
         id: image-id
