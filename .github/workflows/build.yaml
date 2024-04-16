@@ -18,9 +18,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Print the image ID
-        run: echo "RepoDigests=docker inspect --format='{{.RepoDigests}}' gcr.io/alpha/homeapp:latest"
-
+      - name: set variable RepoDigests
+        run: echo "RepoDigests=${docker inspect --format='{{.RepoDigests}}' gcr.io/alpha/homeapp:latest)}"
+      - name: print RepoDigests
+        run: echo "$RepoDigests"
       - name: Set variable $VERSION
         run: echo "VERSION=latest"
 
