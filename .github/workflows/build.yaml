@@ -19,7 +19,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
       - name: set variable RepoDigests
-        run: echo "docker inspect --format='{{.RepoDigests}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
+        run:  docker inspect --format='{{.RepoDigests}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: print RepoDigests
         run: echo "$RepoDigests"
       - name: Set variable $VERSION
