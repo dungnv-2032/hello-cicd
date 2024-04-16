@@ -30,6 +30,7 @@ jobs:
 
       - name: build new version and add tag
         id: build_new_version
+        run: |
           docker build -t "$TAG" --build-arg VERSION="$VERSION" --build-arg BUILD_TIMESTAMP="$BUILD_TIMESTAMP" .
 
 #  send_notify_approve:
