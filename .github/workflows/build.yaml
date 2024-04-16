@@ -40,7 +40,7 @@ jobs:
       - name: Build and tag image $VERSION
         id: build_and_tag_previous
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #
 
