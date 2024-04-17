@@ -35,8 +35,10 @@ jobs:
 
       - name: Build and tag image sha
         id: build_and_tag_image_previous
-        run:
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:${{ steps.set-variable.outputs.github_sha }} -f ./Dockerfile .
+        uses: docker/build-push-action@v5
+        with:
+          load: true
+          tags: ${{ steps.set-variable.outputs.github_sha }}
 
       - name: checkout
         uses: actions/checkout@v2
