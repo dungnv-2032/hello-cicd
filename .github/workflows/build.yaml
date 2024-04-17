@@ -114,23 +114,23 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  send_notify_failure:
-    name: send_notify_failure
-    runs-on: ubuntu-latest
-    if: failure()
-    needs: build_and_push
-    steps:
-      - name: Report Status fail
-        id: slack_fail
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Deloy Fail !"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+#  send_notify_failure:
+#    name: send_notify_failure
+#    runs-on: ubuntu-latest
+#    if: failure()
+#    needs: build_and_push
+#    steps:
+#      - name: Report Status fail
+#        id: slack_fail
+#        uses: slackapi/slack-github-action@v1.25.0
+#        with:
+#          payload: |
+#            {
+#              "text": "Deloy Fail !"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
 #  rollback:
 #    name: rollback
