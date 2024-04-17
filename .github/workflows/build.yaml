@@ -44,7 +44,7 @@ jobs:
       - name: Build and tag image latest
         id: build_and_tag_previous
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest -f .docker/Dockerfile .
 #          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
