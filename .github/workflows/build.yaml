@@ -23,7 +23,7 @@ jobs:
       - name: set variable RepoDigests
         id: get-repo-digests
         run: |
-          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd)
           echo "::set-output name=repo_digests::$repo_digests"
       #        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
 #      - name: print RepoDigests
