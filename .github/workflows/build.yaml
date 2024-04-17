@@ -41,10 +41,16 @@ jobs:
       - name: checkout
         uses: actions/checkout@v2
 
-      - name: Build and tag image latest
-        id: build_and_tag_previous
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v5
+        with:
+          load: true
+          tags: latest
+
+#      - name: Build and tag image latest
+#        id: build_and_tag_previous
+#        run: |
+#          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
 #          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
