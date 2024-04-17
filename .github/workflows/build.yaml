@@ -21,8 +21,11 @@ jobs:
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: set variable RepoDigests
-        id: set_variable
-        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
+        id: get-repo-digests
+        run: |
+          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          echo "::set-output name=repo_digests::$repo_digests"
+      #        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
 #      - name: print RepoDigests
 #        run: |
 #          echo "RepoDigests: ${RepoDigests}"
@@ -33,9 +36,9 @@ jobs:
 
       - name: get variable $previous
         run: |
-          docker_repo_digest=$(echo "${{ steps.set_variable.outputs.RepoDigests }}")
+          repo_digests=$(echo "${{ steps.get-repo-digests.outputs.repo_digests }}")
           
-          echo "Sử dụng RepoDigests: ${docker_repo_digest}"
+          echo "Sử dụng RepoDigests: ${repo_digests}"
 
 #      - name: Build and tag image PREVIOUS
 #        id: build_and_tag_image_previous
