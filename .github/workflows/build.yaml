@@ -20,17 +20,43 @@ jobs:
       - name: docker pull
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-      - name: set variable RepoDigests
-        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
-      - name: print RepoDigests
+
+      - name: Lấy RepoDigests Docker
+        id: get-docker-repo-digests
         run: |
-          echo "RepoDigests: ${RepoDigests}"
+          # Lấy RepoDigests Docker từ Docker Hub
+          docker_image=${{ github.repository }}
+          docker_tag=${{ github.event.ref.tag }}
+      
+          # Kiểm tra xem tag có phải là tag SHA-256 hay không
+          if [[ "$docker_tag" =~ ^[0-9a-f]{64}$ ]]; then
+            docker_repo_digest="$docker_tag"
+          else
+            # Lấy RepoDigests Docker từ tag
+            docker_repo_digest=$(docker pull $docker_image:$docker_tag | awk '{print $3}')
+          fi
+      
+          # Gán RepoDigests Docker vào biến
+          echo "::set-output name=docker_repo_digest::$docker_repo_digest"
 
-      - name: Set variable $VERSION
-        run: docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-
-      - name: Set variable $previous
-        run: echo "PREVIOUS=${{ github.sha }}"
+      - name: Sử dụng biến RepoDigests Docker
+        run: |
+          # Truy cập biến RepoDigests Docker
+          docker_repo_digest=$(echo "${{ steps.get-docker-repo-digests.outputs.docker_repo_digest }}")
+      
+          # In RepoDigests Docker
+          echo "Sử dụng RepoDigests Docker: ${docker_repo_digest}"
+#      - name: set variable RepoDigests
+#        run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
+#      - name: print RepoDigests
+#        run: |
+#          echo "RepoDigests: ${RepoDigests}"
+#
+#      - name: Set variable $VERSION
+#        run: docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#
+#      - name: Set variable $previous
+#        run: echo "PREVIOUS=${{ github.sha }}"
 
 #      - name: Build and tag image PREVIOUS
 #        id: build_and_tag_image_previous
