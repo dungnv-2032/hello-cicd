@@ -38,14 +38,14 @@ jobs:
 #        id: build_and_tag_image_previous
 #        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:$PREVIOUS
 
-      - name: checkout
-        uses: actions/checkout@v2
-#
-      - name: Build and tag image $VERSION
-        id: build_and_tag_previous
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#      - name: checkout
+#        uses: actions/checkout@v2
+##
+#      - name: Build and tag image $VERSION
+#        id: build_and_tag_previous
+#        run: |
+#          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
+#          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 #
 
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
