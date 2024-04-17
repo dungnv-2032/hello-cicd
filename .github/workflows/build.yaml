@@ -132,26 +132,26 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
-  rollback:
-    name: rollback
-    runs-on: ubuntu-latest
-    needs: send_notify_failure
-    if: failure()
-    steps:
-      - name: Pull current version
-        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-      - name: Set variable
-        id: set-variable-latest
-        run: |
-          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo "::set-output name=repo_digests::$repo_digests"
-      - name: Push Docker Image
-        id: docker_pre_build
-        run: |
-           repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
-           repo_digests_latest=$(echo "${{ steps.set-variable-latest.outputs.repo_digests }}")
-          echo ${repo_digests}
-          echo ${repo_digests_latest}
+#  rollback:
+#    name: rollback
+#    runs-on: ubuntu-latest
+#    needs: send_notify_failure
+#    if: failure()
+#    steps:
+#      - name: Pull current version
+#        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#      - name: Set variable
+#        id: set-variable-latest
+#        run: |
+#          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+#          echo "::set-output name=repo_digests::$repo_digests"
+#      - name: Push Docker Image
+#        id: docker_pre_build
+#        run: |
+#           repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
+#           repo_digests_latest=$(echo "${{ steps.set-variable-latest.outputs.repo_digests }}")
+#          echo ${repo_digests}
+#          echo ${repo_digests_latest}
 
 #          repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
 #          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
