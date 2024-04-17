@@ -23,7 +23,7 @@ jobs:
       - name: set variable RepoDigests
         run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
       - name: print RepoDigests
-        run: echo "$RepoDigests"
+        run: echo "docker inspect ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
       - name: Set variable $VERSION
         run: echo "${RepoDigests}"
 
