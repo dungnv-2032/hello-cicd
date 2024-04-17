@@ -24,9 +24,7 @@ jobs:
         run:  echo "::set-output RepoDigests=docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest"
       - name: print RepoDigests
         run: |
-          repo_digests=$(echo "${{ steps.previous_step.outputs.repo_digests }}")
-          # Gán RepoDigests vào biến
-          echo "RepoDigests: ${repo_digests}"
+          echo "RepoDigests: ${RepoDigests}"
 
       - name: Set variable $VERSION
         run: docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
