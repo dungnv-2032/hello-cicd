@@ -25,7 +25,7 @@ jobs:
       - name: print RepoDigests
         run: echo "$RepoDigests"
       - name: Set variable $VERSION
-        run: echo "${{ RepoDigests }}"
+        run: echo "${RepoDigests}"
 
       - name: Set variable $previous
         run: echo "PREVIOUS=${{ github.sha }}"
