@@ -68,7 +68,7 @@ jobs:
         name: test variable
         run: |
           echo ${OUTPUT1}
-          echo "$(echo "${{ jobs.build_and_tag_image.steps.set-variable.outputs.test }}")"
+          echo "${OUTPUT1}"
           echo "$(echo "${{ needs.build_and_tag_image.steps.set-variable.outputs.test }}")"
 
 ##      # Notify Slack with an interactive message
