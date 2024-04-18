@@ -24,9 +24,9 @@ jobs:
       - id: set-variable
         shell: bash
         run: |
-          hello="abcdefgh"
-          echo "Output [$hello]"
-          echo "test=${hello: -10}" >> "$GITHUB_OUTPUT"
+          hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          echo "Output [$hello:-10]"
+          echo "test=$hello:-10" >> "$GITHUB_OUTPUT"
 #      - name: get variable
 #        run: |
 #          abc=$(echo "${{ steps.set-variable.outputs.test }}")
