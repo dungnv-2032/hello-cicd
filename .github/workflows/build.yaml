@@ -112,18 +112,14 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-  rollback:
-    name: rollback
+  check_need_rollback:
+    name: check_need_rollback
     runs-on: ubuntu-latest
-    needs: [send_notify_failure, build_and_tag_image]
+    outputs:
+      repo_digests: ${{ steps.set-variable-latest.outputs.repo_digests }}
+    needs: [ send_notify_failure, build_and_tag_image ]
     if: failure()
     steps:
-      - name: Login Docker Hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Pull current version
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: Check repo_digests current
@@ -136,9 +132,20 @@ jobs:
           echo ${{needs.build_and_tag_image.outputs.repo_digests}}
           echo ${{steps.set-variable-latest.outputs.repo_digests}}
           echo ${{needs.build_and_tag_image.outputs.repo_digests != steps.set-variable-latest.outputs.repo_digests}}
+  rollback:
+    name: rollback
+    runs-on: ubuntu-latest
+    needs: [send_notify_failure, build_and_tag_image, check_need_rollback]
+    if: success() && ${{needs.build_and_tag_image.outputs.repo_digests != steps.set-variable-latest.outputs.repo_digests}}
+    steps:
+      - name: Login Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+
       - name: Push Docker Image
         id: docker_pre_build
-        if: ${{needs.build_and_tag_image.outputs.repo_digests != steps.set-variable-latest.outputs.repo_digests}}
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:${{github.sha}}
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:${{github.sha}} ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
