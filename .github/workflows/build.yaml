@@ -61,11 +61,11 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-      - name: Push Image
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: latest
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:abcdef
 
   send_notify_success:
     name: send_notify_success
@@ -121,6 +121,10 @@ jobs:
         run: |
           repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
           echo "repo_digests=${repo_digests: -64}" >> "$GITHUB_OUTPUT"
+      - name: get variable
+        run: |
+          echo ${{needs.build_and_tag_image.outputs.repo_digests}}
+          echo ${{steps.set-variable-latest.repo_digests}}
       - name: Push Docker Image
         id: docker_pre_build
         if: ${{needs.build_and_tag_image.outputs.repo_digests}} != ${{steps.set-variable-latest.repo_digests}}
