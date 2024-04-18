@@ -25,7 +25,7 @@ jobs:
         id: set-variable
         run: |
           repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo "repo_digests=$repo_digests" >> "$GITHUB_OUTPUT"
+          echo "repo_digests=${repo_digests}" >> "$GITHUB_OUTPUT"
       - name: get variable
         run: |
           repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
