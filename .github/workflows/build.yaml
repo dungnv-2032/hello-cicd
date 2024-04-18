@@ -64,31 +64,34 @@ jobs:
     needs: build_and_tag_image
     if: success()
     steps:
-      -
-      # Notify Slack with an interactive message
-      - name: Send custom JSON data to Slack workflow
-        id: slack
-        uses: slackapi/slack-github-action@v1.25.0
-        with:
-          payload: |
-            {
-              "text": "Có một bản release cần được approve.\nENV: staging\nRepository: ${{ github.repository }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-  push_image:
-    environment: staging
-    name: push_image
-    runs-on: ubuntu-latest
-    needs: send_notify_approve
-    if: success()
-    steps:
       - name: test variable
         run: |
           repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
           echo ${repo_digests}
+#      # Notify Slack with an interactive message
+#      - name: Send custom JSON data to Slack workflow
+#        id: slack
+#        uses: slackapi/slack-github-action@v1.25.0
+#        with:
+#          payload: |
+#            {
+#              "text": "Có một bản release cần được approve.\nENV: staging\nRepository: ${{ github.repository }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+#            }
+#        env:
+#          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+#
+#  push_image:
+#    environment: staging
+#    name: push_image
+#    runs-on: ubuntu-latest
+#    needs: send_notify_approve
+#    if: success()
+#    steps:
+#      - name: test variable
+#        run: |
+#          repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
+#          echo ${repo_digests}
 #      - name: Push Image
 #        uses: docker/build-push-action@v5
 #        with:
