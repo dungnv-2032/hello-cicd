@@ -25,7 +25,7 @@ jobs:
         run: |
           hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
           echo $hello
-          echo "test=$(echo $hello)" >> "$GITHUB_OUTPUT"
+          echo "test=abcdef" >> "$GITHUB_OUTPUT"
 #      - name: get variable
 #        run: |
 #          abc=$(echo "${{ steps.set-variable.outputs.test }}")
