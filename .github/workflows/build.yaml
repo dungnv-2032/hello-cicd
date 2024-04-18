@@ -65,7 +65,7 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:abcdef
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 
   send_notify_success:
     name: send_notify_success
