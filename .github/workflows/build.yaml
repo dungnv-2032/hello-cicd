@@ -28,7 +28,7 @@ jobs:
 
       - name: get variable
         run: |
-          echo "Sử dụng RepoDigests: $(echo "${{ steps.set-variable.outputs.test }}"
+          echo "Sử dụng RepoDigests: $(echo "${{ steps.set-variable.outputs.test }}")
   #
 #      - name: Build and tag image sha
 #        id: build_and_tag_image_previous
