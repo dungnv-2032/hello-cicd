@@ -13,6 +13,8 @@ jobs:
     outputs:
       test: ${{ steps.set-variable.outputs.test }}
       needs-updating: ${{ steps.check.outputs.needs-updating }}
+      needs-updating-new: ${{ steps.check_new.outputs.needs-updating }}
+
     steps:
       - name: Login Docker Hub
         id: login_docker_hub
@@ -52,7 +54,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Check if update available
-        id: check
+        id: check_new
         uses: lucacome/docker-image-update-checker@v1
         with:
           base-image: nginx:1.21.0
@@ -60,7 +62,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Check result
-        run: echo "${{ steps.check.outputs.needs-updating }}"
+        run: echo "${{ steps.check_new.outputs.needs-updating }}"
 #      - name: get variable
 #        run: |
 #          abc=$(echo "${{ steps.set-variable.outputs.test }}")
