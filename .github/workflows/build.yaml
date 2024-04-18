@@ -62,10 +62,16 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest .
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+      - name: Checkout
+        uses: actions/checkout@v4
+          - name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
+      - name: Build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          load: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 
   send_notify_success:
     name: send_notify_success
@@ -124,10 +130,10 @@ jobs:
       - name: get variable
         run: |
           echo ${{needs.build_and_tag_image.outputs.repo_digests}}
-          echo ${{steps.set-variable-latest.repo_digests}}
+          echo ${{steps.set-variable-latest.outputs.repo_digests}}
       - name: Push Docker Image
         id: docker_pre_build
-        if: ${{needs.build_and_tag_image.outputs.repo_digests}} != ${{steps.set-variable-latest.repo_digests}}
+        if: ${{needs.build_and_tag_image.outputs.repo_digests}} != ${{steps.set-variable-latest.outputs.repo_digests}}
         run: |
           docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:${{github.sha}}
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:${{github.sha}} ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
