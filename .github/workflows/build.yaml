@@ -36,8 +36,7 @@ jobs:
           image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 
       - name: Check result
-        run:
-          echo "Needs updating: ${{ steps.check.outputs.needs-updating }}"
+        run: echo "${{ steps.check.outputs.needs-updating }}"
 #      - name: get variable
 #        run: |
 #          abc=$(echo "${{ steps.set-variable.outputs.test }}")
