@@ -141,10 +141,11 @@ jobs:
     needs: [build_and_tag_image, check_need_rollback]
 #    if: failure() && ${{needs.build_and_tag_image.outputs.repo_digests != needs.check_need_rollback.outputs.repo_digests}}
     steps:
-      run: |
-        echo ${{needs.build_and_tag_image.outputs.repo_digests}}
-        echo ${{needs.check_need_rollback.outputs.repo_digests}}
-        echo ${{needs.build_and_tag_image.outputs.repo_digests != needs.check_need_rollback.outputs.repo_digests}}
+      - name: Check variable
+        run: |
+          echo ${{needs.build_and_tag_image.outputs.repo_digests}}
+          echo ${{needs.check_need_rollback.outputs.repo_digests}}
+          echo ${{needs.build_and_tag_image.outputs.repo_digests != needs.check_need_rollback.outputs.repo_digests}}
 #      - name: Login Docker Hub
 #        uses: docker/login-action@v1
 #        with:
