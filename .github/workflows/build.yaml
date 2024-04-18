@@ -56,6 +56,11 @@ jobs:
     needs: send_notify_approve
     if: success()
     steps:
+      - name: Login Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Push Image
         uses: docker/build-push-action@v5
         with:
@@ -104,6 +109,11 @@ jobs:
     needs: [send_notify_failure, build_and_tag_image]
     if: failure()
     steps:
+      - name: Login Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: Pull current version
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - name: Check repo_digests current
