@@ -91,16 +91,16 @@ jobs:
 #          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
 #          docker push ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:previous
 
-#  send_notify_approve:
-#    name: send_notify_approve
-#    runs-on: ubuntu-latest
-#    needs: build_and_tag_image
-#    if: success()
-#    steps:
-##      - env:
-##          OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
-##        name: test variable
-#        - run: echo test [${{needs.build_and_tag_image.outputs.test}}]
+  send_notify_approve:
+    name: send_notify_approve
+    runs-on: ubuntu-latest
+    needs: build_and_tag_image
+    if: success()
+    steps:
+#      - env:
+#          OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
+#        name: test variable
+        - run: echo test [${{needs.build_and_tag_image.outputs.test}}]
 
 
 ##      # Notify Slack with an interactive message
