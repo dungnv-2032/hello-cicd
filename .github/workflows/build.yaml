@@ -66,7 +66,7 @@ jobs:
     steps:
       - name: test variable
         run: |
-          repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
+          repo_digests=$(echo "${{ jobs.build_and_tag_image.steps.set-variable.outputs.repo_digests }}")
           echo ${repo_digests}
 #      # Notify Slack with an interactive message
 #      - name: Send custom JSON data to Slack workflow
