@@ -12,6 +12,7 @@ jobs:
     name: build_and_tag_image
     outputs:
       output1: ${{ steps.set-variable.outputs.repo_digests }}
+      output2: ${{ steps.set-variable.outputs.test }}
     steps:
       - name: Login Docker Hub
         id: login_docker_hub
@@ -21,11 +22,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: pull docker
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-      - name: set variable
-        id: set-variable
+      - id: set-variable
         run: |
           repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
           echo "repo_digests=${repo_digests}" >> "$GITHUB_OUTPUT"
+          echo "test=abcdef" >> "$GITHUB_OUTPUT"
       - name: get variable
         run: |
           repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
@@ -64,9 +65,12 @@ jobs:
     steps:
       - env:
           OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
+          OUTPUT2: ${{needs.build_and_tag_image.outputs.output2}}
         name: test variable
         run: |
           echo ${OUTPUT1}
+          echo ${OUTPUT2}
+
 ##      # Notify Slack with an interactive message
 ##      - name: Send custom JSON data to Slack workflow
 ##        id: slack
