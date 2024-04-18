@@ -24,7 +24,7 @@ jobs:
       - id: set-variable
         run: |
           hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo "::set-output name=hello::$hello" >> "$GITHUB_OUTPUT"
+          echo "::set-output name=hello::abcdef" >> "$GITHUB_OUTPUT"
 
       - name: get variable
         run: |
