@@ -139,7 +139,7 @@ jobs:
     name: rollback
     runs-on: ubuntu-latest
     needs: [build_and_tag_image, check_need_rollback]
-    if: success() && ${{needs.build_and_tag_image.outputs.repo_digests != needs.check_need_rollback.outputs.repo_digests}}
+    if: failure() && ${{needs.build_and_tag_image.outputs.repo_digests != needs.check_need_rollback.outputs.repo_digests}}
     steps:
       - name: Login Docker Hub
         uses: docker/login-action@v1
