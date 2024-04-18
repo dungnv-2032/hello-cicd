@@ -36,7 +36,6 @@ jobs:
         with:
           base-image: nginx:1.21.0
           image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-          platforms: linux/amd64,linux/arm64
 
       - name: Check result
         run: echo "${{ steps.check.outputs.needs-updating }}"
@@ -50,7 +49,6 @@ jobs:
         with:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-          platforms: linux/amd64,linux/arm64
 
       - name: Check if update available
         id: check_new
@@ -58,7 +56,6 @@ jobs:
         with:
           base-image: nginx:1.21.0
           image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-          platforms: linux/amd64,linux/arm64
 
       - name: Check result
         run: echo "${{ steps.check_new.outputs.needs-updating }}"
