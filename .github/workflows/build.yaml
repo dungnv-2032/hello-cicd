@@ -25,8 +25,6 @@ jobs:
         id: set-variable
         run: |
           repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-#          echo "::set-output name=repo_digests::$repo_digests"
-#          echo "::set-output name=github_sha::${{ github.sha }}"
           echo "repo_digests=${repo_digests}" >> "$GITHUB_OUTPUT"
       - name: get variable
         run: |
@@ -65,7 +63,7 @@ jobs:
     if: success()
     steps:
       - env:
-          OUTPUT1: ${{needs.job1.outputs.output1}}
+          OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
         name: test variable
         run: |
           echo ${OUTPUT1}
