@@ -27,7 +27,7 @@ jobs:
           echo "test=${repo_digests}" >> "$GITHUB_OUTPUT"
       - name: get variable
         run: |
-          echo "Sử dụng RepoDigests: ${test}"
+          echo "Sử dụng RepoDigests: $test"
 #
 #      - name: Build and tag image sha
 #        id: build_and_tag_image_previous
