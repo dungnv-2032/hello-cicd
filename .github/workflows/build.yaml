@@ -24,13 +24,13 @@ jobs:
       - id: set-variable
         run: |
           hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          echo $hello
           echo "test=$(echo $hello)" >> "$GITHUB_OUTPUT"
-
-      - name: get variable
-        run: |
-          abc=$(echo "${{ steps.set-variable.outputs.test }}")
-          echo "test nao: ${abc}"
-          echo "$(echo "${{ steps.set-variable.outputs.test }}")"
+#      - name: get variable
+#        run: |
+#          abc=$(echo "${{ steps.set-variable.outputs.test }}")
+#          echo "test nao: ${abc}"
+#          echo "$(echo "${{ steps.set-variable.outputs.test }}")"
   #
 #      - name: Build and tag image sha
 #        id: build_and_tag_image_previous
@@ -66,10 +66,8 @@ jobs:
       - env:
           OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
         name: test variable
-        run: |
-          echo ${OUTPUT1}
-          echo "${OUTPUT1}"
-          echo "$(echo "${{ needs.build_and_tag_image.steps.set-variable.outputs.test }}")"
+        run: echo "$OUTPUT1"
+
 
 ##      # Notify Slack with an interactive message
 ##      - name: Send custom JSON data to Slack workflow
