@@ -10,8 +10,8 @@ jobs:
   build_and_tag_image:
     runs-on: ubuntu-latest
     name: build_and_tag_image
-    outputs:
-      test: ${{ steps.set-variable.outputs.test }}
+#    outputs:
+#      test: ${{ steps.set-variable.outputs.test }}
     steps:
       - name: Login Docker Hub
         id: login_docker_hub
