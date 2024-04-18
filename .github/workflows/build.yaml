@@ -65,7 +65,10 @@ jobs:
       - name: Build and Push Docker Image
         run: |
           docker build -t dungc/hello-cicd:latest .
-          docker push dungc/hello-cicd:abcdef
+          docker push dungc/hello-cicd:latest
+      - name: Build and Push Docker Image
+        run: |
+          docker push dungc/hello-cicd:abcdefgh
 #      - name: Checkout
 #        uses: actions/checkout@v4
 #      - name: Set up Docker Buildx
