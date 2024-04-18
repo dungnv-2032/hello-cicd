@@ -24,12 +24,13 @@ jobs:
       - id: set-variable
         run: |
           hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo "::set-output name=test::abcdef" >> "$GITHUB_OUTPUT"
+          echo "test=abcdef" >> "$GITHUB_OUTPUT"
 
       - name: get variable
         run: |
           abc=$(echo "${{ steps.set-variable.outputs.test }}")
-          echo "abc nao: ${abc}"
+          echo "test nao: ${abc}"
+          echo "$(echo "${{ steps.set-variable.outputs.test }}")"
   #
 #      - name: Build and tag image sha
 #        id: build_and_tag_image_previous
