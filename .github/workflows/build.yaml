@@ -24,7 +24,7 @@ jobs:
       - id: set-variable
         shell: bash
         run: |
-          hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          hello="abcdefgh"
           echo "Output [$hello]"
           echo "test=$hello" >> "$GITHUB_OUTPUT"
 #      - name: get variable
