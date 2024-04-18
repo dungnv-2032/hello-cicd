@@ -24,41 +24,42 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
       - name: pull docker
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-#      - id: set-variable
-#        shell: bash
-#        run: |
-#          hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-#          echo "Output [${hello:-10}]"
-#          echo "test=sha256:ee5001d9e994dd54d615846c2c4eeaad19111873cba93ae6442c25823e9c3736" >> "$GITHUB_OUTPUT"
-      - name: Check if update available
-        id: check
-        uses: lucacome/docker-image-update-checker@v1
-        with:
-          base-image: nginx:1.21.0
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 
-      - name: Check result
-        run: echo "${{ steps.check.outputs.needs-updating }}"
-
-
-      - name: Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-
-      - name: Check if update available
-        id: check_new
-        uses: lucacome/docker-image-update-checker@v1
-        with:
-          base-image: nginx:1.21.0
-          image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-
-      - name: Check result
-        run: echo "${{ steps.check_new.outputs.needs-updating }}"
+      - id: set-variable
+        shell: bash
+        run: |
+          hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          echo ${hello: -10}
+          echo "test=${hello: -10}" >> "$GITHUB_OUTPUT"
+#      - name: Check if update available
+#        id: check
+#        uses: lucacome/docker-image-update-checker@v1
+#        with:
+#          base-image: nginx:1.21.0
+#          image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#
+#      - name: Check result
+#        run: echo "${{ steps.check.outputs.needs-updating }}"
+#
+#
+#      - name: Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#
+#      - name: Build and push
+#        uses: docker/build-push-action@v3
+#        with:
+#          push: true
+#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#
+#      - name: Check if update available
+#        id: check_new
+#        uses: lucacome/docker-image-update-checker@v1
+#        with:
+#          base-image: nginx:1.21.0
+#          image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+#
+#      - name: Check result
+#        run: echo "${{ steps.check_new.outputs.needs-updating }}"
 #      - name: get variable
 #        run: |
 #          abc=$(echo "${{ steps.set-variable.outputs.test }}")
