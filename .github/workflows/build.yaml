@@ -11,26 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     name: build_and_tag_image
     outputs:
-      test: ${{ steps.set-variable.outputs.test }}
-      needs-updating: ${{ steps.check.outputs.needs-updating }}
-      needs-updating-new: ${{ steps.check_new.outputs.needs-updating }}
-
+      repo_digests: ${{ steps.set-variable.outputs.repo_digests }}
     steps:
-#      - name: Login Docker Hub
-#        id: login_docker_hub
-#        uses: docker/login-action@v1
-#        with:
-#          username: ${{ secrets.DOCKERHUB_USERNAME }}
-#          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-#      - name: pull docker
-#        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
-
+      - name: Login Docker Hub
+        id: login_docker_hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - name: pull docker
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - id: set-variable
         shell: bash
         run: |
-          hello=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo ${hello: -10}
-          echo "test=${hello: -10}" >> "$GITHUB_OUTPUT"
+          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
+          echo "repo_digests=${repo_digests: -10}" >> "$GITHUB_OUTPUT"
 #      - name: Check if update available
 #        id: check
 #        uses: lucacome/docker-image-update-checker@v1
@@ -100,7 +95,7 @@ jobs:
 #      - env:
 #          OUTPUT1: ${{needs.build_and_tag_image.outputs.output1}}
 #        name: test variable
-        - run: echo test [${{needs.build_and_tag_image.outputs.test}}]
+        - run: echo test [${{needs.build_and_tag_image.outputs.repo_digests}}]
 
 
 ##      # Notify Slack with an interactive message
