@@ -23,8 +23,7 @@ jobs:
         run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
       - id: set-variable
         run: |
-          repo_digests=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest)
-          echo "test=${repo_digests}" >> "$GITHUB_OUTPUT"
+          test=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest) >> "$GITHUB_OUTPUT"
       - name: get variable
         run: |
           echo "Sử dụng RepoDigests: $test"
