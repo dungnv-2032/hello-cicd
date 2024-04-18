@@ -33,7 +33,7 @@ jobs:
         uses: lucacome/docker-image-update-checker@v1
         with:
           base-image: nginx:1.21.0
-          image: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/hello-cicd:latest
 
       - name: Check result
         run: echo "${{ steps.check.outputs.needs-updating }}"
