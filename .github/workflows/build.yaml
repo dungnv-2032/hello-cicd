@@ -10,6 +10,8 @@ jobs:
   build_and_tag_image:
     runs-on: ubuntu-latest
     name: build_and_tag_image
+    outputs:
+      output1: ${{ steps.set-variable.outputs.repo_digests }}
     steps:
       - name: Login Docker Hub
         id: login_docker_hub
@@ -32,22 +34,22 @@ jobs:
 #        run: |
 #          repo_digests=$(echo "${{ steps.set-variable.outputs.repo_digests }}")
 #          echo "Sử dụng RepoDigests: ${repo_digests}"
-
-      - name: Build and tag image sha
-        id: build_and_tag_image_previous
-        uses: docker/build-push-action@v5
-        with:
-          load: true
-          tags: ${{ steps.set-variable.outputs.github_sha }}
-
-      - name: checkout
-        uses: actions/checkout@v2
-
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v5
-        with:
-          load: true
-          tags: latest
+#
+#      - name: Build and tag image sha
+#        id: build_and_tag_image_previous
+#        uses: docker/build-push-action@v5
+#        with:
+#          load: true
+#          tags: ${{ steps.set-variable.outputs.github_sha }}
+#
+#      - name: checkout
+#        uses: actions/checkout@v2
+#
+#      - name: Build and export to Docker
+#        uses: docker/build-push-action@v5
+#        with:
+#          load: true
+#          tags: latest
 
 #      - name: Build and tag image latest
 #        id: build_and_tag_previous
@@ -65,8 +67,10 @@ jobs:
     if: success()
     steps:
       - name: test variable
+        env:
+          OUTPUT1: ${{needs.job1.outputs.output1}}
         run: |
-          repo_digests=$(echo "${{ jobs.build_and_tag_image.steps.set-variable.outputs.repo_digests }}")
+          repo_digests=$(echo "${{ needs.build_and_tag_image.outputs.output1 }}")
           echo ${repo_digests}
 #      # Notify Slack with an interactive message
 #      - name: Send custom JSON data to Slack workflow
